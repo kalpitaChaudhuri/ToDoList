@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="contaier">
+        <div class="row">
+            <h1 class="text-center">todo</h1>
+        </div>
+        <div class="row ">
+            <div class="col">
+                <input type="text" id="text" placeholder="Enter your text"  >
+                <button class="btn btn-primary" id="submit">Add</button>
+            </div>
+
+        </div>
+        <div class="row m-3 d-flex justify-content-evenly">
+            <div class="col">
+                <input type="search" id="search" placeholder="search..."/>
+                <button class="btn btn-danger" onclick="clearHandler()">Clear All</button>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-start" id="body">
+          
+        
+        </div>
+    </div>
+    <script>
+      
+        let globalArr=getItemHandler()
+        let submit=document.getElementById('submit')
+        let body=document.getElementById('body')
+        let text=document.getElementById('text')
+        let edit=''
+        print()
+        //this is for the clear handler
+        function clearHandler()
+        {
+              globalArr=[]
+              setItemHandler()
+              print()
+        }
+        //this is for the set item
+          function setItemHandler()
+          {
+            localStorage.setItem('todos',JSON.stringify(globalArr))
+          }
+        //this is for the get item
+        function getItemHandler()
+        {
+            return localStorage.getItem('todos')?JSON.parse(localStorage.getItem('todos')):[]
+        }
+
+        //this is for the edit
+        function editHandler(id)
+        {
+            let findData=globalArr.find(item=>item.id==id)
+            edit=findData
+            submit.innerText="update"
+            submit.classList.add('btn-danger')
+            text.value=findData.msg
+            
+        }
+        //this is for the delete
+        function deleteHandler(id)
+        {
+            globalArr=globalArr.filter(item=>item.id !=id)
+            setItemHandler()
+            print()
+        }
+         //this is for the printing
+         function print()
+         {
+              let str=''
+              globalArr.map((item)=>{
+                str+=` <div class="col-md-4 m-2">
+                <div class="card">
+                    <div class="card-body">
+                        <p>${item.msg}</p>
+                        <button class="btn btn-primary" onclick="editHandler(${item.id})">edit</button>
+                        <button class="btn btn-danger" onclick="deleteHandler(${item.id})">delete</button>
+
+                    </div>
+                </div>
+            </div>`
+              })   
+               body.innerHTML=str
+            }
+        submit.addEventListener('click',()=>{
+            if(!text.value) {
+                return alert('required******')
+          }
+          else{
+            if(edit)
+            {
+            globalArr=globalArr.map((item)=>{
+                if(item.id==edit.id)
+                {
+                  let newText= text.value;
+                  return {
+                    ...item,msg:newText
+                  }
+                }
+                else{
+                    return item
+                }
+            })
+            submit.innerText="Add"
+            submit.classList.remove('btn-danger')
+            edit=""
+            }
+            else{
+                  //logic
+            let obj={
+                id: Math.trunc( Math.random()*1000),
+                msg:text.value
+           }
+            globalArr.push(obj)
+            }
+            
+             //printing 
+             print()
+             text.value=""
+             setItemHandler()
+          }
+        })
+    </script>
+</body>
+
+</html>
