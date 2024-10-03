@@ -41,6 +41,7 @@
         let text=document.getElementById('text')
         let edit=''
         print()
+        
         //this is for the clear handler
         function clearHandler()
         {
@@ -48,11 +49,13 @@
               setItemHandler()
               print()
         }
+        
         //this is for the set item
           function setItemHandler()
           {
             localStorage.setItem('todos',JSON.stringify(globalArr))
           }
+        
         //this is for the get item
         function getItemHandler()
         {
@@ -69,6 +72,7 @@
             text.value=findData.msg
             
         }
+        
         //this is for the delete
         function deleteHandler(id)
         {
@@ -76,6 +80,7 @@
             setItemHandler()
             print()
         }
+        
          //this is for the printing
          function print()
          {
